@@ -147,12 +147,22 @@ class PlayState extends FlxState {
 		super.update(elapsed);
 		
 		if (FlxG.mouse.justPressed) {
-			swypeBegin.set(FlxG.mouse.x, FlxG.mouse.y);
+			#if mobile
+				swypeBegin.set(FlxG.touches.getFirst().screenX, FlxG.touches.getFirst().screenY);
+			#else
+				swypeBegin.set(FlxG.mouse.x, FlxG.mouse.y);
+			#end
 		}
 		if (FlxG.mouse.justReleased) { // <3 God bless this code
 			
-			var travelX = FlxG.mouse.x - swypeBegin.x;
-			var travelY = -(FlxG.mouse.y - swypeBegin.y);
+			
+			#if mobile
+				var travelX = FlxG.touches.getFirst().screenX - swypeBegin.x;
+				var travelY = -(FlxG.mouse.y - FlxG.touches.getFirst().screenY);
+			#else
+				var travelX = FlxG.mouse.x - swypeBegin.x;
+				var travelY = -(FlxG.mouse.y - swypeBegin.y);
+			#end
 			
 			var atan2 = (Math.atan2(travelY, travelX) + Math.PI);
 			
@@ -178,24 +188,24 @@ class PlayState extends FlxState {
 		
 		#if !mobile
 		
-		if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
-			boardDirection = 1;
-		}
-		if (FlxG.keys.justPressed.NUMPADTHREE || FlxG.keys.justPressed.C) {
-			boardDirection = 3;
-		}
-		if (FlxG.keys.justPressed.NUMPADFOUR || FlxG.keys.justPressed.A) {
-			boardDirection = 4;
-		}
-		if (FlxG.keys.justPressed.NUMPADSIX || FlxG.keys.justPressed.D) {
-			boardDirection = 6;
-		}
-		if (FlxG.keys.justPressed.NUMPADSEVEN || FlxG.keys.justPressed.Q) {
-			boardDirection = 7;
-		}
-		if (FlxG.keys.justPressed.NUMPADNINE || FlxG.keys.justPressed.E) {
-			boardDirection = 9;
-		}
+			if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
+				boardDirection = 1;
+			}
+			if (FlxG.keys.justPressed.NUMPADTHREE || FlxG.keys.justPressed.C) {
+				boardDirection = 3;
+			}
+			if (FlxG.keys.justPressed.NUMPADFOUR || FlxG.keys.justPressed.A) {
+				boardDirection = 4;
+			}
+			if (FlxG.keys.justPressed.NUMPADSIX || FlxG.keys.justPressed.D) {
+				boardDirection = 6;
+			}
+			if (FlxG.keys.justPressed.NUMPADSEVEN || FlxG.keys.justPressed.Q) {
+				boardDirection = 7;
+			}
+			if (FlxG.keys.justPressed.NUMPADNINE || FlxG.keys.justPressed.E) {
+				boardDirection = 9;
+			}
 		#end
 	}
 }
