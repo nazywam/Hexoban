@@ -4,6 +4,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.FlxPointer;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import haxe.rtti.XmlParser;
@@ -21,6 +23,8 @@ class PlayState extends FlxState {
 	var tiles:Array<Array<Tile>>;
 	var pieces:Array<Piece>;
 	
+	var swypeBegin:FlxPoint;
+	
 	override public function create():Void {
 		super.create();
 		
@@ -28,6 +32,8 @@ class PlayState extends FlxState {
 		background = new Array<Array<Tile>>();
 		
 		pieces = new Array<Piece>();
+		
+		swypeBegin = FlxPoint.get(0, 0);
 		
 		for (y in 0...boardSize) {
 			tiles[y] = new Array<Tile>();
@@ -139,6 +145,35 @@ class PlayState extends FlxState {
 	
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
+		
+		if (FlxG.mouse.justPressed) {
+			swypeBegin.set(FlxG.mouse.x, FlxG.mouse.y);
+		}
+		if (FlxG.mouse.justReleased) { // <3 God bless this code
+			
+			var travelX = FlxG.mouse.x - swypeBegin.x;
+			var travelY = -(FlxG.mouse.y - swypeBegin.y);
+			
+			var atan2 = (Math.atan2(travelY, travelX) + Math.PI);
+			
+			atan2 = (atan2 - Math.PI / 6 + Math.PI * 2) % (Math.PI * 2);
+			var direction = Std.int(atan2 / (Math.PI / 3));
+				
+			switch(direction) {
+				case 0:
+					boardDirection = 1;
+				case 1:
+					boardDirection = 3;
+				case 2:
+					boardDirection = 6;
+				case 3:
+					boardDirection = 9;
+				case 4:
+					boardDirection = 7;
+				case 5:
+					boardDirection = 4;
+			}
+		}
 		
 		
 		#if !mobile

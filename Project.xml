@@ -18,7 +18,8 @@
 	
 	<!--Web-specific-->
 	<window if="web" orientation="portrait"  />
-	
+	<android target-sdk-version="19" /> 
+
 	<!--Desktop-specific-->
 	<window if="desktop" antialiasing="1" orientation="landscape" fullscreen="false" resizable="true" />
 	
