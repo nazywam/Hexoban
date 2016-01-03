@@ -13,18 +13,24 @@ class Tile extends FlxSprite {
 	public var pos:FlxPoint;
 	public var t:FlxText;
 	public var pieceID:Int;
+	public var exist:Bool;
 	
-	public function new(X:Int, Y:Int, I:Int) {
+	public function new(X:Int, Y:Int, I:Int, e:Bool) {
 		var tmp = Settings.getPosition(X, Y);
 		pos = FlxPoint.get(X, Y);
+		
+		super(tmp.x, tmp.y, "assets/images/Tile.png");
 		
 		t = new FlxText(tmp.x + Settings.TILE_SIZE / 2, tmp.y + Settings.TILE_SIZE / 2, 0, Std.string(Y)+":"+Std.string(X));
 		t.color = FlxColor.BLUE;
 		t.size = 32;
 		
 		pieceID = I;
+		exist = e;
 		
-		super(tmp.x, tmp.y, "assets/images/Tile.png");
+		visible = exist;
+		
+		
 	}
 	
 	public function updatePosition() {

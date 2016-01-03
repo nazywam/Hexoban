@@ -18,6 +18,8 @@ class PlayState extends FlxState {
 	var tiles:Array<Array<Tile>>;
 	var pieces:FlxTypedGroup<Piece>;
 	
+	var map = "0011110011111001111111111111011111101111100011110";
+	
 	override public function create():Void {
 		super.create();
 		
@@ -31,7 +33,7 @@ class PlayState extends FlxState {
 			tiles[y] = new Array<Tile>();
 			background[y] = new Array<Tile>();
 			for (x in 0...boardSize) {
-				var t = new Tile(x, y, -1);
+				var t = new Tile(x, y, -1, map.charAt(y*boardSize+x) == '1');
 				add(t);
 				//add(t.t);
 				background[y].push(t);

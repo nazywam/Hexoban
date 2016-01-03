@@ -19,7 +19,7 @@ class Piece extends FlxBasic{
 	}
 	
 	public function addTile(x:Int, y:Int) {
-		var t = new Tile(x, y, pieceId);
+		var t = new Tile(x, y, pieceId, true);
 		t.color = 0xFFFF0000;
 		tiles.add(t);
 		
