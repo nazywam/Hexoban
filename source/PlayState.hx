@@ -146,13 +146,16 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		
-		if (FlxG.mouse.justPressed) {
-			#if mobile
-				swypeBegin.set(FlxG.touches.getFirst().screenX, FlxG.touches.getFirst().screenY);
-			#else
+		#if mobile
+			if (FlxG.touches.getFirst().justPressed) {
+				swypeBegin.set(FlxG.touches.getFirst().screenX, FlxG.touches.getFirst().screenY);	
+			}
+		#else
+			if (FlxG.mouse.justPressed) {
 				swypeBegin.set(FlxG.mouse.x, FlxG.mouse.y);
-			#end
-		}
+			}
+		#end
+		
 		if (FlxG.mouse.justReleased) { // <3 God bless this code
 			
 			
