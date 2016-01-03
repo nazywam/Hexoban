@@ -140,6 +140,9 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		
+		
+		#if !mobile
+		
 		if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
 			boardDirection = 1;
 		}
@@ -158,5 +161,6 @@ class PlayState extends FlxState {
 		if (FlxG.keys.justPressed.NUMPADNINE || FlxG.keys.justPressed.E) {
 			boardDirection = 9;
 		}
+		#end
 	}
 }
