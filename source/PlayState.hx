@@ -1,16 +1,11 @@
 package source;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
 import flixel.util.FlxTimer;
-import haxe.rtti.XmlParser;
-import source.*;
 import openfl.Assets;
+import source.*;
 
 
 class PlayState extends FlxState {
@@ -24,6 +19,17 @@ class PlayState extends FlxState {
 	var pieces:Array<Piece>;
 	
 	var swypeBegin:FlxPoint;
+	
+	var gameFinished:Bool = false;
+	
+	var gameID:Int;
+	
+	var moving:Bool = true;
+	
+	override public function new(id:Int) {
+		super();
+		gameID = id;
+	}
 	
 	override public function create():Void {
 		super.create();
@@ -43,13 +49,12 @@ class PlayState extends FlxState {
 				background[y].push(null);
 			}
 		}
-		loadLevel("assets/data/map.tmx");
+		loadLevel("assets/data/map"+Std.string(gameID)+".tmx");
 		for (p in pieces) {
 			for (t in p.tiles) {
 				add(t);
 			}
 		}
-		
 		tick();
 	}
 
@@ -72,7 +77,7 @@ class PlayState extends FlxState {
 				var boardX:Int = _tileNumber % Settings.BOARD_SIZE;
 				var boardY:Int = Std.int(_tileNumber / Settings.BOARD_SIZE);
 				
-				if (tileID != 0 && tileID != 1) {
+				if (tileID != 0 && tileID != 1 && tileID < 8) {
 					
 					if (getPiece(tileID) == null) {
 						var p = new Piece(tileID);
@@ -83,21 +88,20 @@ class PlayState extends FlxState {
 					var t = new Tile(boardX, boardY, 1);
 					background[boardY][boardX] = t;
 					add(t);
-					_tileNumber++;
+					
 				} else {
 					var t = new Tile(boardX, boardY, tileID);
 					background[boardY][boardX] = t;
 					add(t);
-					_tileNumber++;
 				}
-				
-				
+				_tileNumber++;
 			}
 		}
 	}
 
 		
 	function tick() {
+		moving = false;
 		for (p in pieces) {
 			var canFall:Bool = true;
 			
@@ -123,20 +127,40 @@ class PlayState extends FlxState {
 			}
 			
 			if (canFall) {
+				moving = true;
+				for (t in p.tiles) {
+					tiles[Std.int(t.pos.y)][Std.int(t.pos.x)] = null;
+				}
 				for (t in p.tiles) {
 					var nextPos = Settings.getNextPosition(t.pos.x, t.pos.y, boardDirection);
-					
-					tiles[Std.int(t.pos.y)][Std.int(t.pos.x)] = null;
 					tiles[Std.int(nextPos.y)][Std.int(nextPos.x)] = t;
 					t.pos.x = nextPos.x;
 					t.pos.y = nextPos.y;
 					t.updatePosition();
 				}
 			}
-			
-			
 		}
 		
+		
+		var check = true;
+		
+		for (y in 0...Settings.BOARD_SIZE) {
+			for (x in 0...Settings.BOARD_SIZE) {
+				if (background[y][x].pieceID >= 8 && background[y][x].pieceID < 16) {
+					if (tiles[y][x] == null || tiles[y][x].pieceID + 8 != background[y][x].pieceID) {
+						check = false;
+					}
+				}
+			}
+		}
+		if (!moving) {
+			if (check && !gameFinished) {
+				gameFinished = true;
+				
+				var t = new FlxTimer();
+				t.start(.5, function(_) { FlxG.switchState(new PlayState(gameID + 1)); } );
+			}
+		}
 		
 		var t = new FlxTimer();
 		t.start(.1, function(_) { tick(); } );
@@ -162,7 +186,6 @@ class PlayState extends FlxState {
 		#else
 		if (FlxG.mouse.justReleased) { // <3 God bless this code
 		#end
-			
 			#if mobile
 				var travelX = FlxG.touches.getFirst().screenX - swypeBegin.x;
 				var travelY = -(FlxG.touches.getFirst().screenY - swypeBegin.y);
@@ -192,9 +215,7 @@ class PlayState extends FlxState {
 			}
 		}
 		
-		
 		#if !mobile
-		
 			if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
 				boardDirection = 1;
 			}
