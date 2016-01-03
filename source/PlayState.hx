@@ -60,25 +60,32 @@ class PlayState extends FlxState {
 		var _tileNumber = 0;
 		
 		for (t in _tiles) {
-			var tileID = Std.parseInt(t.get("gid"));
-			if (tileID != 0) {
+			var tileID = Std.parseInt(t.get("gid"))-1;
+			if (tileID != -1) {
 				
 				var boardX:Int = _tileNumber % Settings.BOARD_SIZE;
 				var boardY:Int = Std.int(_tileNumber / Settings.BOARD_SIZE);
 				
-				if (tileID != 1 && tileID != 2) {
+				if (tileID != 0 && tileID != 1) {
 					
 					if (getPiece(tileID) == null) {
 						var p = new Piece(tileID);
 						pieces.push(p);
 					}
 					tiles[boardY][boardX] = getPiece(tileID).addTile(boardX, boardY);
+					
+					var t = new Tile(boardX, boardY, 1);
+					background[boardY][boardX] = t;
+					add(t);
+					_tileNumber++;
+				} else {
+					var t = new Tile(boardX, boardY, tileID);
+					background[boardY][boardX] = t;
+					add(t);
+					_tileNumber++;
 				}
 				
-				var t = new Tile(boardX, boardY, 1);
-				background[boardY][boardX] = t;
-				add(t);
-				_tileNumber++;
+				
 			}
 		}
 	}
@@ -91,20 +98,16 @@ class PlayState extends FlxState {
 			for (t in p.tiles) {
 				if (!Settings.nextPositionExists(t.pos.x, t.pos.y, boardDirection)) {
 					canFall = false;
-					trace("!exists");
 					break;
 				}
-				
 				var nextPos = Settings.getNextPosition(t.pos.x, t.pos.y, boardDirection);
 				
 				if (nextPos.x == -1) {
 					canFall = false;
 					break;
 				}
-				
 				if (tiles[Std.int(nextPos.y)][Std.int(nextPos.x)] != null && tiles[Std.int(nextPos.y)][Std.int(nextPos.x)].pieceID != t.pieceID) {
 					canFall = false;
-					trace(tiles);
 					break;
 				}
 				if (background[Std.int(nextPos.y)][Std.int(nextPos.x)].pieceID == 0) {
@@ -115,7 +118,6 @@ class PlayState extends FlxState {
 			
 			if (canFall) {
 				for (t in p.tiles) {
-					trace("falling");
 					var nextPos = Settings.getNextPosition(t.pos.x, t.pos.y, boardDirection);
 					
 					tiles[Std.int(t.pos.y)][Std.int(t.pos.x)] = null;
