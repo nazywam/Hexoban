@@ -156,12 +156,16 @@ class PlayState extends FlxState {
 			}
 		#end
 		
+		
+		#if mobile
+		if (FlxG.touches.getFirst().justReleased) { 
+		#else
 		if (FlxG.mouse.justReleased) { // <3 God bless this code
-			
+		#end
 			
 			#if mobile
 				var travelX = FlxG.touches.getFirst().screenX - swypeBegin.x;
-				var travelY = -(FlxG.mouse.y - FlxG.touches.getFirst().screenY);
+				var travelY = -(FlxG.touches.getFirst().screenY - swypeBegin.y);
 			#else
 				var travelX = FlxG.mouse.x - swypeBegin.x;
 				var travelY = -(FlxG.mouse.y - swypeBegin.y);
