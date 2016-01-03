@@ -6,7 +6,10 @@ import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
+import haxe.rtti.XmlParser;
 import source.*;
+import openfl.Assets;
+
 
 class PlayState extends FlxState {
 	
@@ -16,9 +19,7 @@ class PlayState extends FlxState {
 	
 	var background:Array<Array<Tile>>;
 	var tiles:Array<Array<Tile>>;
-	var pieces:FlxTypedGroup<Piece>;
-	
-	var map = "0011110011111001111111111111011111101111100011110";
+	var pieces:Array<Piece>;
 	
 	override public function create():Void {
 		super.create();
@@ -26,35 +27,63 @@ class PlayState extends FlxState {
 		tiles = new Array<Array<Tile>>();
 		background = new Array<Array<Tile>>();
 		
-		pieces = new FlxTypedGroup<Piece>();
-		add(pieces);
+		pieces = new Array<Piece>();
 		
 		for (y in 0...boardSize) {
 			tiles[y] = new Array<Tile>();
 			background[y] = new Array<Tile>();
-			for (x in 0...boardSize) {
-				var t = new Tile(x, y, -1, map.charAt(y*boardSize+x) == '1');
-				add(t);
-				//add(t.t);
-				background[y].push(t);
+			for (x in 0...Settings.BOARD_SIZE) {
+				tiles[y].push(null);
+				background[y].push(null);
 			}
 		}
-		
-		var p = new Piece(0);
-		add(p.tiles);
-		pieces.add(p);
-		
-		p.addTile(0, 0);
-		p.addTile(0, 1);
-		p.addTile(1, 1);
-		
-		tiles[0][0] = p.tiles.members[0];
-		tiles[0][1] = p.tiles.members[1];
-		tiles[1][1] = p.tiles.members[2];
+		loadLevel("assets/data/map.tmx");
+		for (p in pieces) {
+			for (t in p.tiles) {
+				add(t);
+			}
+		}
 		
 		tick();
 	}
 
+	function getPiece(ID:Int) {
+		for (p in pieces) {
+			if (p.pieceId == ID) return p;
+		}
+		return null;
+	}
+	
+	function loadLevel(path:String) {
+		var data = Xml.parse(Assets.getText(path)).firstElement();
+		var _tiles = data.elementsNamed("layer").next().elementsNamed("data").next().elementsNamed("tile");
+		var _tileNumber = 0;
+		
+		for (t in _tiles) {
+			var tileID = Std.parseInt(t.get("gid"));
+			if (tileID != 0) {
+				
+				var boardX:Int = _tileNumber % Settings.BOARD_SIZE;
+				var boardY:Int = Std.int(_tileNumber / Settings.BOARD_SIZE);
+				
+				if (tileID != 1 && tileID != 2) {
+					
+					if (getPiece(tileID) == null) {
+						var p = new Piece(tileID);
+						pieces.push(p);
+					}
+					tiles[boardY][boardX] = getPiece(tileID).addTile(boardX, boardY);
+				}
+				
+				var t = new Tile(boardX, boardY, 1);
+				background[boardY][boardX] = t;
+				add(t);
+				_tileNumber++;
+			}
+		}
+	}
+
+		
 	function tick() {
 		for (p in pieces) {
 			var canFall:Bool = true;
@@ -73,15 +102,20 @@ class PlayState extends FlxState {
 					break;
 				}
 				
-				if (tiles[Std.int(nextPos.y)][Std.int(nextPos.x)] != null &&  tiles[Std.int(nextPos.y)][Std.int(nextPos.x)].pieceID != t.pieceID) {
+				if (tiles[Std.int(nextPos.y)][Std.int(nextPos.x)] != null && tiles[Std.int(nextPos.y)][Std.int(nextPos.x)].pieceID != t.pieceID) {
 					canFall = false;
-					trace("nexPosNotNull");
+					trace(tiles);
+					break;
+				}
+				if (background[Std.int(nextPos.y)][Std.int(nextPos.x)].pieceID == 0) {
+					canFall = false;
 					break;
 				}
 			}
 			
 			if (canFall) {
 				for (t in p.tiles) {
+					trace("falling");
 					var nextPos = Settings.getNextPosition(t.pos.x, t.pos.y, boardDirection);
 					
 					tiles[Std.int(t.pos.y)][Std.int(t.pos.x)] = null;

@@ -15,7 +15,6 @@ class Settings {
 		var height = Math.round(Settings.TILE_SIZE * (Math.sqrt(3) - (Math.sqrt(3) - 1) / 4));
 		var posX:Float = x * Settings.TILE_SIZE * Math.sqrt(3);
 		var posY:Float = y * height;
-		
 		if (y % 2 == 1) {
 			posX += Settings.TILE_SIZE * Math.sqrt(3) / 2;
 		}	
