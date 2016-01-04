@@ -163,7 +163,7 @@ class PlayState extends FlxState {
 		}
 		
 		var t = new FlxTimer();
-		t.start(.1, function(_) { tick(); } );
+		t.start(.06, function(_) { tick(); } );
 	}
 
 	

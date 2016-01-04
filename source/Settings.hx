@@ -75,5 +75,4 @@ class Settings {
 		}
 		return FlxPoint.get( -1, -1);
 	}
-	
 }
