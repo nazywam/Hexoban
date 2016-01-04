@@ -182,9 +182,9 @@ class PlayState extends FlxState {
 		
 		
 		#if mobile
-		if (FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justReleased) { 
+		if (FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justReleased && !moving) { 
 		#else
-		if (FlxG.mouse.justReleased) { // <3 God bless this code
+		if (FlxG.mouse.justReleased && !moving) { // <3 God bless this code
 		#end
 			#if mobile
 				var travelX = FlxG.touches.getFirst().screenX - swypeBegin.x;
@@ -216,23 +216,25 @@ class PlayState extends FlxState {
 		}
 		
 		#if !mobile
-			if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
-				boardDirection = 1;
-			}
-			if (FlxG.keys.justPressed.NUMPADTHREE || FlxG.keys.justPressed.C) {
-				boardDirection = 3;
-			}
-			if (FlxG.keys.justPressed.NUMPADFOUR || FlxG.keys.justPressed.A) {
-				boardDirection = 4;
-			}
-			if (FlxG.keys.justPressed.NUMPADSIX || FlxG.keys.justPressed.D) {
-				boardDirection = 6;
-			}
-			if (FlxG.keys.justPressed.NUMPADSEVEN || FlxG.keys.justPressed.Q) {
-				boardDirection = 7;
-			}
-			if (FlxG.keys.justPressed.NUMPADNINE || FlxG.keys.justPressed.E) {
-				boardDirection = 9;
+			if (!moving) {
+				if (FlxG.keys.justPressed.NUMPADONE || FlxG.keys.justPressed.Z) {
+					boardDirection = 1;
+				}
+				if (FlxG.keys.justPressed.NUMPADTHREE || FlxG.keys.justPressed.C) {
+					boardDirection = 3;
+				}
+				if (FlxG.keys.justPressed.NUMPADFOUR || FlxG.keys.justPressed.A) {
+					boardDirection = 4;
+				}
+				if (FlxG.keys.justPressed.NUMPADSIX || FlxG.keys.justPressed.D) {
+					boardDirection = 6;
+				}
+				if (FlxG.keys.justPressed.NUMPADSEVEN || FlxG.keys.justPressed.Q) {
+					boardDirection = 7;
+				}
+				if (FlxG.keys.justPressed.NUMPADNINE || FlxG.keys.justPressed.E) {
+					boardDirection = 9;
+				}
 			}
 		#end
 	}
