@@ -7,7 +7,7 @@ import flixel.math.FlxPoint;
  */
 class Settings {
 
-	public static var TILE_SIZE:Int = 48;
+	public static var TILE_SIZE:Int = 52;
 	public static var BOARD_SIZE:Int = 7;
 
 

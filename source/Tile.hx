@@ -18,7 +18,7 @@ class Tile extends FlxSprite {
 		pos = FlxPoint.get(X, Y);
 		
 		super(tmp.x, tmp.y);
-		loadGraphic("assets/images/Tile.png", true, 85, 98);
+		loadGraphic("assets/images/Tile.png", true, 90, 106);
 		animation.add("default", [I]);
 		animation.play("default");
 		
