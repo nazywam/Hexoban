@@ -24,7 +24,7 @@
 	<window if="desktop" antialiasing="1" orientation="landscape" fullscreen="false" resizable="true" />
 	
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="portrait" fullscreen="true" width="0" height="0" />
+	<window if="mobile" orientation="portrait" fullscreen="true" width="720" height="1280" />
 	
 	<!--------------------------------PATHS SETTINGS-------------------------------->
 	

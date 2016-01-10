@@ -9,7 +9,7 @@ class Settings {
 
 	public static var TILE_SIZE:Int = 52;
 	public static var BOARD_SIZE:Int = 7;
-
+	public static var BOARD_OFFSET:FlxPoint = FlxPoint.get(24, 60);
 
 	public static function getPosition(x:Float, y:Float):FlxPoint {
 		var height = Math.round(Settings.TILE_SIZE * (Math.sqrt(3) - (Math.sqrt(3) - 1) / 4));
@@ -19,7 +19,7 @@ class Settings {
 			posX += Settings.TILE_SIZE * Math.sqrt(3) / 2;
 		}	
 		
-		return FlxPoint.get(posX, posY);
+		return FlxPoint.get(posX + BOARD_OFFSET.x, posY + BOARD_OFFSET.y);
 	}
 
 	public static function nextPositionExists(x:Float, y:Float, direction:Int):Bool {

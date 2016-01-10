@@ -1,6 +1,7 @@
 package source;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
@@ -33,6 +34,9 @@ class PlayState extends FlxState {
 	
 	override public function create():Void {
 		super.create();
+		
+		var b = new FlxSprite(0, 0, "assets/images/Background.png");
+		add(b);
 		
 		tiles = new Array<Array<Tile>>();
 		background = new Array<Array<Tile>>();
@@ -157,8 +161,7 @@ class PlayState extends FlxState {
 			if (check && !gameFinished) {
 				gameFinished = true;
 				
-				var t = new FlxTimer();
-				t.start(.5, function(_) { FlxG.switchState(new PlayState(gameID + 1)); } );
+				FlxG.switchState(new PlayState(gameID + 1));
 			}
 		}
 		
