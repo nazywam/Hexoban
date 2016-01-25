@@ -1,10 +1,13 @@
 package source;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
+import haxe.Timer;
 import openfl.Assets;
 import source.*;
 
@@ -56,6 +59,8 @@ class PlayState extends FlxState {
 		loadLevel("assets/data/map"+Std.string(gameID)+".tmx");
 		for (p in pieces) {
 			for (t in p.tiles) {
+				t.scale.x = t.scale.y = 0;
+				FlxTween.tween(t.scale, { x:1, y:1 }, .5, { ease:FlxEase.cubeInOut } );
 				add(t);
 			}
 		}
@@ -161,14 +166,28 @@ class PlayState extends FlxState {
 			if (check && !gameFinished) {
 				gameFinished = true;
 				
-				FlxG.switchState(new PlayState(gameID + 1));
+				finishGame();
 			}
 		}
 		
 		var t = new FlxTimer();
 		t.start(.06, function(_) { tick(); } );
 	}
-
+	
+	function finishGame() {
+		for (y in 0...tiles.length) {
+			for (x in 0...tiles[y].length) {
+				if (tiles[y][x] != null) {
+					FlxTween.tween(tiles[y][x].scale, { x:0, y:0 }, 1, { ease:FlxEase.cubeInOut } );
+				}
+			}
+		}
+		
+		var t = new FlxTimer();
+		t.start(1, function(_) {
+			FlxG.switchState(new PlayState(gameID+1));
+		});
+	}
 	
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
