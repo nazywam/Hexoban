@@ -3,7 +3,8 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 /**
  * ...
  * @author Michael
@@ -24,10 +25,10 @@ class Tile extends FlxSprite {
 		
 		pieceID = I;
 	}
-	
 	public function updatePosition() {
 		var tmp = Settings.getPosition(pos.x, pos.y);
-		x = tmp.x;
-		y = tmp.y;
+
+
+		FlxTween.tween(this, {x:tmp.x, y:tmp.y}, Settings.TICK_LENGTH);
 	}
 }

@@ -10,6 +10,7 @@ class Settings {
 	public static var TILE_SIZE:Int = 52;
 	public static var BOARD_SIZE:Int = 7;
 	public static var BOARD_OFFSET:FlxPoint = FlxPoint.get(24, 60);
+	public static var TICK_LENGTH:Float = .07;
 
 	public static function getPosition(x:Float, y:Float):FlxPoint {
 		var height = Math.round(Settings.TILE_SIZE * (Math.sqrt(3) - (Math.sqrt(3) - 1) / 4));
